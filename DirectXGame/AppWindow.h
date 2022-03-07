@@ -2,6 +2,8 @@
 #include "Window.h"
 #include "GraphicsEngine.h"
 #include "SwapChain.h"
+#include "DeviceContext.h"
+#include "VertexBuffer.h"
 
 
 //high level window
@@ -18,5 +20,6 @@ public:
 
 private:
 	SwapChain *m_swap_chain;
+	VertexBuffer *m_vb;
 };
 

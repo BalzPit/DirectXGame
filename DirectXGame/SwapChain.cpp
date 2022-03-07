@@ -36,11 +36,34 @@ bool SwapChain::init(HWND hwnd, UINT width, UINT height)
 
 	//create the swap chain for the window indicated by HWND window handle parameter
 	HRESULT hr= GraphicsEngine::get()->m_dxgi_factory->CreateSwapChain(device, &desc, &m_swap_chain);
-	
 	if (FAILED(hr)) 
 	{
 		return false;
 	}
+
+	//get back buffer
+	ID3D11Texture2D *buffer = NULL;
+	hr = m_swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D),(void**)&buffer);
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	//create render target view from the device
+	hr = device->CreateRenderTargetView(buffer, NULL, &m_rtv);
+	buffer->Release();
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool SwapChain::present(bool vsync)
+{
+	//if sync interval is 0 the presentation occours immediately without any synchrnonization
+	m_swap_chain->Present(vsync, NULL);
 
 	return true;
 }

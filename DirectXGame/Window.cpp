@@ -94,6 +94,9 @@ bool Window::broadcast()
 {
 	MSG msg;
 
+	//since broadcast function is called in the main loop until the app is closed, we can place onUpdate here
+	this->onUpdate();
+	
 	//get messages from OS messages queue until queue is empty
 	while (::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
 	{
@@ -101,9 +104,7 @@ bool Window::broadcast()
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
-
-	//since broadcast function is called in the main loop until the app is closed, we can place onUpdate here
-	this->onUpdate();
+	
 	//don't allow the CPU to throttle, allow small pause to handle loop in a more relaxed way
 	Sleep(0);
 
